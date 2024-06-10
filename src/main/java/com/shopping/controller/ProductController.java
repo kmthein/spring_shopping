@@ -1,10 +1,12 @@
 package com.shopping.controller;
 
+import com.shopping.dto.ProductDTO;
 import com.shopping.entity.Category;
 import com.shopping.entity.Image;
 import com.shopping.entity.Product;
 import com.shopping.repository.ImageRepository;
 import com.shopping.service.CategoryService;
+import com.shopping.service.ImageService;
 import com.shopping.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,11 +31,11 @@ public class ProductController {
     private CategoryService categoryService;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImageService imageService;
     private static final String UPLOAD_DIR = System.getProperty("user.home") + "/spring_shopping/static/external-images";
 
     @GetMapping("/")
-    public List<Product> renderHomePage() {
+    public List<ProductDTO> renderHomePage() {
         return productService.getAllProduct();
     }
 
@@ -61,12 +63,13 @@ public class ProductController {
                 image.setFileName(fileName);
                 image.setFilePath("/external-images/" + fileName);
                 image.setProduct(product);
-
-                imageRepository.save(image);
+                imageService.saveImage(image);
 
                 images.add(image);
             }
         }
+        product.setImages(images);
+        productService.saveProduct(product);
     }
 
     @GetMapping("/all-products")
@@ -88,8 +91,6 @@ public class ProductController {
     }
 }
 
-
-
 //@Controller
 //public class ProductController {
 //    @Autowired
@@ -101,7 +102,7 @@ public class ProductController {
 //    private ProductService productService;
 //
 //    @Autowired
-//    private ImageRepository imageRepository;
+//    private ImageService imageService;
 //
 //    @GetMapping("/")
 //    public String renderHomePage(Model model) {
@@ -136,11 +137,13 @@ public class ProductController {
 //                image.setFilePath("/external-images/" + fileName);
 //                image.setProduct(product);
 //
-//                imageRepository.save(image);
+//                imageService.saveImage(image);
 //
 //                images.add(image);
 //            }
 //        }
+//        product.setImages(images);
+//        productService.saveProduct(product);
 //        return "redirect:/all-products";
 //    }
 //

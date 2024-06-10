@@ -1,11 +1,12 @@
 package com.shopping.service;
 
+import com.shopping.dto.ProductDTO;
 import com.shopping.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    public List<Product> getAllProduct();
+    public List<ProductDTO> getAllProduct();
 
     public Product getProductById(Long id);
 
