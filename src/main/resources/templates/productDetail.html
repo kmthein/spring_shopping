@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping</title>
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div th:insert="navbar"></div>
+  <div class="l-wrap-inner" th:object="${product}">
+    <h1 style="margin: 20px 0">Product Details</h1>
+    <div style="display: flex; gap: 20px">
+      <div>
+        <div th:if="${!product.images.isEmpty()}">
+          <img th:src="@{${product.images[0].filePath}}" width="700" height="500" style="object-fit: cover" />
+          <div th:if="${!product.images.isEmpty()}" style="display: flex">
+            <img th:each="image : ${product.images}" th:src="@{${image.filePath}}" style="width: 150px; height: 150px; object-fit: cover">
+          </div>
+        </div>
+        <div th:if="${product.images.isEmpty()}">
+          <img th:src="@{/images/no_image.jpg}" />
+        </div>
+      </div>
+      <div>
+        <h3 th:text="*{title}" style="margin-bottom: 10px"></h3>
+        <h3 th:text="'$' + *{price}" style="margin-bottom: 10px"></h3>
+        <span th:text="${product.category.name}" style="background-color: #e5e5e5; padding: 5px 10px; border-radius: 5px; margin-bottom: 5px; display: inline-block"></span>
+        <div style="margin-top: 20px">
+          <a th:href="@{/product-edit/{id}(id = ${product.id})}" style="padding: 10px 15px; background: rgb(2, 2, 105); color: white; margin-right: 10px; text-decoration: none; border-radius: 5px;">Edit</a>
+          <a th:href="@{/delete-product/{id}(id = ${product.id})}" style="padding: 10px; background: red; color: white; border-radius: 5px; text-decoration: none;">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping</title>
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<style>
+  .category-container {
+    width: 30%;
+    margin: 0 auto;
+  }
+  table, th, td {
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 10px;
+  }
+</style>
+<body>
+<div th:insert="navbar"></div>
+  <div class="category-container">
+    <h1 style="margin: 20px 0">All Category</h1>
+    <table border="1">
+      <thead>
+      <tr style="background: rgb(2, 2, 105); color: white">
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="category : ${categories}">
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}" style="width: 300px"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

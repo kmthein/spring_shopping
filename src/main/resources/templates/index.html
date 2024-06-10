@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div th:insert="navbar"></div>
+        <div class="main">
+            <div class="main__inner l-wrap-inner">
+                <section class="mainvisual">
+                </section>
+                <section class="all_products">
+                    <h1>All Products</h1>
+                    <div class="product_container">
+                        <div class="product_card" th:each="product : ${products}">
+                            <a th:href="@{/product/{id}(id = ${product.id})}">
+                                <img th:if="${product.images.isEmpty()}" th:src="@{/images/no_image.jpg}"  alt="img"/>
+                            </a>
+                            <a th:href="@{/product/{id}(id = ${product.id})}">
+                                <img th:if="${!product.images.isEmpty()}" th:src="@{${product.images[0].filePath}}" />
+                            </a>
+                            <span th:text="${product.category.name}" style="background-color: #e5e5e5; padding: 5px 10px; border-radius: 5px; margin-bottom: 5px; display: inline-block"></span>
+                            <p th:text="${product.title}"></p>
+                            <h5 th:text="'$' + ${product.price}"></h5>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

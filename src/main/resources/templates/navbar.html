@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+  <div th:fragment="navbar">
+      <header>
+          <div class="l-head l-wrap-inner">
+          <div class="h_logo">
+              <h1><a th:href="@{/}" style="color: white; text-decoration: none">Shopping</a></h1>
+          </div>
+          <nav>
+              <ul>
+                  <li><a th:href="@{/add-new/product}">Add New Product</a></li>
+                  <li><a th:href="@{/add-category}">Add New Category</a></li>
+                  <li><a th:href="@{/all-products}">Show All Products</a></li>
+                  <li><a th:href="@{/all-category}">Show All Categories</a></li>
+              </ul>
+          </nav>
+          </div>
+      </header>
+  </div>
+</body>
+</html>

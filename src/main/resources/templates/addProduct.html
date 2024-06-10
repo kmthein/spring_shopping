@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Product</title>
+</head>
+<style>
+  label {
+    display: block;
+  }
+  form {
+    background: white;
+    border-radius: 10px;
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 10px 20px;
+    padding-right: 30px;
+  }
+  .text_input {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    padding-left: 10px;
+  }
+  form > div > label {
+    font-weight: 500;
+    font-size: 16px;
+  }
+  form > div {
+    margin: 10px 0;
+  }
+  .btn {
+    height: 35px;
+    width: 60px;
+    border-radius: 5px;
+    border: 0px;
+    margin-left: 10px;
+  }
+  input[type="file"] {
+    margin-top: 10px;
+  }
+</style>
+<body>
+<div th:insert="navbar"></div>
+<form th:action="@{/saveProduct}" th:object="${products}" method="post" enctype="multipart/form-data">
+  <h1>Add New Product</h1>
+  <div>
+    <label for="title">Name</label>
+    <input type="text" id="title" th:field="*{title}" class="text_input" required>
+  </div>
+  <div>
+    <label for="price">Price</label>
+    <input type="text" id="price" th:field="*{price}" class="text_input" required>
+  </div>
+  <div>
+    <label for="category">Category</label>
+    <select id="category" th:field="*{category}">
+      <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+  </div>
+  <div>
+    <label for="img">Upload Images</label>
+    <input type="file" id="img" name="files"  multiple />
+  </div>
+  <div style="margin: 20px 0; display: flex; justify-content: end;">
+    <input type="submit" id="submit" name="submit" class="btn" style="background: rgb(2, 2, 105); color: white;">
+  </div>
+</form>
+</body>
+</html>
