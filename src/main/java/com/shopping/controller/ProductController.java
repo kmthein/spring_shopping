@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public Product getProductDetail(@PathVariable Long id) {
+    public ProductDTO getProductDetail(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
@@ -87,9 +87,10 @@ public class ProductController {
     }
 
     @GetMapping("delete-product/{id}")
-    public String deleteProductById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
+        imageService.deleteImage(id);
         productService.deleteProduct(id);
-        return "redirect:/all-products";
+        return ResponseEntity.ok("Product deleted successfully");
     }
 }
 

@@ -31,4 +31,14 @@ public class Product {
     @JsonBackReference
     @OneToMany(mappedBy = "product")
     private List<Image> images;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                '}';
+    }
 }
