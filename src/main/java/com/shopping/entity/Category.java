@@ -20,7 +20,7 @@ public class Category {
 
     private String name;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+//    @JsonBackReference
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Product> products;
 }

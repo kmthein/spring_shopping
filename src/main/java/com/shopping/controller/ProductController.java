@@ -9,6 +9,7 @@ import com.shopping.service.CategoryService;
 import com.shopping.service.ImageService;
 import com.shopping.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -39,44 +41,44 @@ public class ProductController {
         return productService.getAllProduct();
     }
 
+    @GetMapping("/all-products")
+    public List<ProductDTO> getAllProducts() {
+        return productService.getAllProduct();
+    }
+
     @GetMapping("/product/{id}")
     public Product getProductDetail(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @PostMapping("/saveProduct")
-    public void addProduct(@ModelAttribute("product") Product product, @RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<String> addProduct(@ModelAttribute Product product, @RequestParam("files") MultipartFile[] files) {
         List<Image> images = new ArrayList<>();
 
         productService.saveProduct(product);
 
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                try {
+        try {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
                     Files.createDirectories(Paths.get(UPLOAD_DIR));
                     file.transferTo(new File(UPLOAD_DIR + "/" + fileName));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+
+                    Image image = new Image();
+                    image.setFileName(fileName);
+                    image.setFilePath("/external-images/" + fileName);
+                    image.setProduct(product);
+                    imageService.saveImage(image);
+
+                    images.add(image);
                 }
-                Image image = new Image();
-                image.setFileName(fileName);
-                image.setFilePath("/external-images/" + fileName);
-                image.setProduct(product);
-                imageService.saveImage(image);
-
-                images.add(image);
             }
+            product.setImages(images);
+            productService.saveProduct(product);
+            return ResponseEntity.ok("Files uploaded successfully");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        product.setImages(images);
-        productService.saveProduct(product);
-    }
-
-    @GetMapping("/all-products")
-    public String renderAllProductsPage(Model model) {
-        model.addAttribute("products", productService.getAllProduct());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "allProducts";
     }
 
     @GetMapping("/all-products/category={category}")
