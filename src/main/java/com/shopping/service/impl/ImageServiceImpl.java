@@ -22,6 +22,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public Image findImageById(Long id) {
+        return imageRepository.findById(id).orElse(null);
+    }
+
+    @Override
     @Transactional
     public void deleteImage(Long productId) {
         List<Image> image = imageRepository.findAllByProductId(productId);

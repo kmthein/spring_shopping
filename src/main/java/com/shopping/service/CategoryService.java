@@ -8,4 +8,6 @@ public interface CategoryService {
     public List<Category> getAllCategories();
 
     public Category saveCategory(Category category);
+
+    public Category findCategoryById(Long id);
 }

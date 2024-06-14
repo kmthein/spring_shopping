@@ -52,8 +52,15 @@ public class ProductController {
     }
 
     @PostMapping("/saveProduct")
-    public ResponseEntity<String> addProduct(@ModelAttribute Product product, @RequestParam("files") MultipartFile[] files) {
+        public ResponseEntity<String> addProduct(@ModelAttribute Product product, @RequestParam("files") MultipartFile[] files, @RequestParam(value = "existingImgIds", required = false) List<Long> existingImgIds) {
         List<Image> images = new ArrayList<>();
+
+//        Product product = new Product();
+//        product.setId(productDTO.getId());
+//        product.setTitle(productDTO.getTitle());
+//        product.setPrice(productDTO.getPrice());
+//        Category category = categoryService.findCategoryById(productDTO.getCategoryId());
+//        product.setCategory(category);
 
         productService.saveProduct(product);
 
@@ -73,9 +80,18 @@ public class ProductController {
                     images.add(image);
                 }
             }
+            if (existingImgIds != null) {
+                for (Long id : existingImgIds) {
+                    System.out.println(id);
+                    Image existingImage = imageService.findImageById(id);
+                    if (existingImage != null) {
+                        images.add(existingImage);
+                    }
+                }
+            }
             product.setImages(images);
             productService.saveProduct(product);
-            return ResponseEntity.ok("Files uploaded successfully");
+            return ResponseEntity.ok("Files uploaded successfully"+ product.getTitle());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
