@@ -12,6 +12,7 @@ public interface ProductService {
 
     public Product saveProduct(Product product);
 
+    public Product updateProduct(Product product, Long id, List<Long> removeImgsId);
     public List<Product> getProductByCategoryId(Long categoryId);
 
     public void deleteProduct(Long id);

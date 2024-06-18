@@ -51,7 +51,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @PostMapping("/saveProduct")
+    @PostMapping("/save-product")
         public ResponseEntity<String> addProduct(@ModelAttribute Product product, @RequestParam("files") MultipartFile[] files, @RequestParam(value = "existingImgIds", required = false) List<Long> existingImgIds) {
         List<Image> images = new ArrayList<>();
 
@@ -92,6 +92,41 @@ public class ProductController {
             product.setImages(images);
             productService.saveProduct(product);
             return ResponseEntity.ok("Files uploaded successfully"+ product.getTitle());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/update-product")
+    public ResponseEntity<String> updateProduct(@ModelAttribute Product product, @RequestParam("files") MultipartFile[] files, @RequestParam(value = "removeImgId", required = false) List<Long> removeImgId) {
+        List<Image> images = new ArrayList<>();
+
+//        Product product = new Product();
+//        product.setId(productDTO.getId());
+//        product.setTitle(productDTO.getTitle());
+//        product.setPrice(productDTO.getPrice());
+//        Category category = categoryService.findCategoryById(productDTO.getCategoryId());
+//        product.setCategory(category);
+
+        try {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                    Files.createDirectories(Paths.get(UPLOAD_DIR));
+                    file.transferTo(new File(UPLOAD_DIR + "/" + fileName));
+
+                    Image image = new Image();
+                    image.setFileName(fileName);
+                    image.setFilePath("/external-images/" + fileName);
+                    image.setProduct(product);
+                    imageService.saveImage(image);
+
+                    images.add(image);
+                }
+            }
+            product.setImages(images);
+            productService.updateProduct(product, product.getId(), removeImgId);
+            return ResponseEntity.ok("Files update successfully :"+ product.getTitle());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

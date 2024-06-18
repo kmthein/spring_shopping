@@ -6,8 +6,10 @@ import com.shopping.dto.ProductDTO;
 import com.shopping.entity.Category;
 import com.shopping.entity.Image;
 import com.shopping.entity.Product;
+import com.shopping.repository.ImageRepository;
 import com.shopping.repository.ProductRepository;
 import com.shopping.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
     @Override
     public List<ProductDTO> getAllProduct() {
         List<Product> products = productRepository.findAll();
@@ -35,7 +40,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product updateProduct(Product product, Long id, List<Long> removeImgId) {
+        System.out.println(product);
+        Product existingProduct = productRepository.findById(id).orElse(null);
+
+        if (removeImgId != null && !removeImgId.isEmpty()) {
+            List<Image> imgToRemove = existingProduct.getImages().stream().filter(image -> removeImgId.contains(image.getId())).collect(Collectors.toList());
+
+            imageRepository.deleteAll(imgToRemove);
+
+            existingProduct.getImages().removeAll(imgToRemove);
+        }
+
         return productRepository.save(product);
     }
 
